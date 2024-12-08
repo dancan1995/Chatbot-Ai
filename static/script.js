@@ -1,37 +1,33 @@
-// Function to send the user input to the backend API and get the response
-function sendMessage() {
-    const userInput = document.getElementById('user-input').value;
-    if (userInput.trim() === '') return;
+document.getElementById("send-btn").addEventListener("click", function() {
+    const userInput = document.getElementById("user-input").value;
+    if (userInput.trim() === "") return;
 
-    // Add user message to chat box
-    appendMessage('You: ' + userInput);
+    // Display user message
+    const userMessage = document.createElement("div");
+    userMessage.classList.add("user-message");
+    userMessage.textContent = `You: ${userInput}`;
+    document.getElementById("chat-box").appendChild(userMessage);
 
-    // Send message to API
-    fetch('/api/chat', {
-        method: 'POST',
+    // Send request to the Flask backend
+    fetch("/get-response", {
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json"
         },
-        body: JSON.stringify({ message: userInput }),
+        body: JSON.stringify({ message: userInput })
     })
     .then(response => response.json())
     .then(data => {
-        // Display bot response in chat box
-        appendMessage('Bot: ' + data.message);
+        // Display GPT response
+        const gptMessage = document.createElement("div");
+        gptMessage.classList.add("gpt-message");
+        gptMessage.textContent = `Bot: ${data.message}`;
+        document.getElementById("chat-box").appendChild(gptMessage);
     })
     .catch(error => {
-        console.error('Error:', error);
+        console.error("Error:", error);
     });
 
-    // Clear input field
-    document.getElementById('user-input').value = '';
-}
-
-// Function to append messages to chat box
-function appendMessage(message) {
-    const chatBox = document.getElementById('chat-box');
-    const messageElement = document.createElement('div');
-    messageElement.textContent = message;
-    chatBox.appendChild(messageElement);
-    chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
-}
+    // Clear the input
+    document.getElementById("user-input").value = "";
+});
