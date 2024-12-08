@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health - AI Therapist Agent</title>
+    <!-- Add Font Awesome CDN for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Add Google Font for fancy logo font -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 15px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 36px;
+            font-family: 'Dancing Script', cursive; /* Fancy font for logo */
+        }
+
+        .header p {
+            font-size: 16px;
+        }
+
+        .chat-container {
+            max-width: 600px;
+            margin: 40px auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .chat-log {
+            border-top: 4px solid #4CAF50;
+            padding: 15px;
+            height: 400px;
+            overflow-y: auto;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 75%;
+            line-height: 1.6;
+            word-wrap: break-word;
+        }
+
+        .user-message {
+            background-color: #d1f0ff;
+            align-self: flex-end;
+            text-align: left;
+            color: #333;
+        }
+
+        .ai-message {
+            background-color: #e6e6e6;
+            align-self: flex-start;
+            text-align: left;
+            color: #333;
+        }
+
+        .image-message {
+            background-color: #e6e6e6;
+            align-self: flex-start;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .image-message img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .chat-footer {
+            display: flex;
+            padding: 15px;
+            background-color: white;
+            border-top: 1px solid #ddd;
+        }
+
+        .chat-input {
+            flex: 1;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        .send-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .send-btn:hover {
+            background-color: #45a049;
+        }
+
+        .footer {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .footer a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Custom button for viewing results */
+        .view-results-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+            display: block;
+        }
+
+        .view-results-btn:hover {
+            background-color: #45a049;
+        }
+
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .chat-container {
+                width: 90%;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Mental Health AI Therapist Agent</h1> <!-- Logo with fancy font -->
+        <p>Guiding you towards better mental health</p>
+    </div>
+
+    <div class="chat-container">
+        <div class="chat-log" id="chat-log">
+            <!-- Initial Welcome Message -->
+            <div class="message ai-message"><b>AI Therapist:</b> Welcome to AI Therapist Agent. Let's talk about how you're feeling.
+                <br>Feel free to share your thoughts, and I'll guide you through.
+                <br>Click the button below to view your PHQ-9 assessment results.
+            </div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="user-input" class="chat-input" placeholder="Type your response here..." onkeydown="handleKeyPress(event)">
+            <button onclick="sendMessage()" class="send-btn">
+                <i class="fas fa-paper-plane"></i> <!-- Send icon -->
+            </button>
+        </div>
+
+        <!-- Results Button -->
+        <div class="chat-footer">
+            <button class="view-results-btn" onclick="displayResults()">View Results</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Need help? <a href="mailto:info@aitherapistagent.com">Contact AI Therapist Agent</a></p>
+        <p>© 2024 AI Therapist Agent. All Rights Reserved.</p>
+    </div>
+
+    <script>
+        function sendMessage() {
+            const userInput = document.getElementById('user-input').value.trim();
+            if (!userInput) return;
+
+            appendMessage(userInput, 'user-message'); // Add user's message
+            document.getElementById('user-input').value = ""; // Clear input field
+
+            // Send user input to backend
+            fetch('/get-response', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userInput })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.plot) {
+                    appendImageMessage(data.plot, 'image-message'); // Display results graph
+                } else {
+                    appendMessage(data.message, 'ai-message'); // Regular AI response
+                }
+            })
+            .catch(() => {
+                appendMessage("An error occurred. Please try again later.", 'ai-message');
+            });
+        }
+
+        function appendMessage(text, className) {
+            const chatLog = document.getElementById('chat-log');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${className}`;
+            messageDiv.innerHTML = text.replace(/\n/g, '<br>'); // Preserve newlines
+            chatLog.appendChild(messageDiv);
+            chatLog.scrollTop = chatLog.scrollHeight; // Scroll to bottom
+        }
+
+        function appendImageMessage(imageData, className) {
+            const chatLog = document.getElementById('chat-log');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${className}`;
+            messageDiv.innerHTML = `<img src="data:image/png;base64,${imageData}" alt="Results Graph">`;
+            chatLog.appendChild(messageDiv);
+            chatLog.scrollTop = chatLog.scrollHeight; // Scroll to bottom
+        }
+
+        function displayResults() {
+            // Display results message on the left
+            appendMessage("<b>AI Therapist:</b> Here's your PHQ-9 assessment result. Please review the details.", 'ai-message');
+
+            // You can also add a graph or further assessment results here
+            // For example:
+            const fakeImageData = "iVBORw0KGgoAAAANSUhEUgAAAAUA..." // A placeholder image
+            appendImageMessage(fakeImageData, 'image-message');
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+                event.preventDefault();
+            }
+        }
+    </script>
+</body>
+</html>
