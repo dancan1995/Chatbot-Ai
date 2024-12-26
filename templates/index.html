@@ -3,255 +3,555 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mental Health - AI Therapist Agent</title>
-    <!-- Add Font Awesome CDN for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Add Google Font for fancy logo font -->
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <title>Nursing Data Analysis with SPSS - GVSU KCON</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f9f9f9;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-        }
-
-        .header {
-            background-color: #4CAF50;
-            color: white;
-            text-align: center;
-            padding: 15px;
-        }
-
-        .header h1 {
-            margin: 0;
-            font-size: 36px;
-            font-family: 'Dancing Script', cursive; /* Fancy font for logo */
-        }
-
-        .header p {
-            font-size: 16px;
-        }
-
-        .chat-container {
-            max-width: 900px;
-            margin: 40px auto;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .chat-log {
-            border-top: 4px solid #4CAF50;
-            padding: 15px;
-            height: 400px;
-            overflow-y: auto;
-            background-color: #f0f0f0;
-            border-bottom: 1px solid #ddd;
             display: flex;
             flex-direction: column;
         }
-
-        .message {
-            margin-bottom: 15px;
+        header {
+            background-color: #00548d;
+            color: white;
             padding: 10px;
-            border-radius: 8px;
-            max-width: 75%;
-            line-height: 1.6;
-            word-wrap: break-word;
-        }
-
-        .user-message {
-            background-color: #d1f0ff;
-            align-self: flex-end;
-            text-align: left;
-            color: #333;
-        }
-
-        .ai-message {
-            background-color: #e6e6e6;
-            align-self: flex-start;
-            text-align: left;
-            color: #333;
-        }
-
-        .image-message {
-            background-color: #e6e6e6;
-            align-self: flex-start;
-            text-align: center;
-            padding: 10px;
-        }
-
-        .image-message img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 10px;
-            margin-top: 10px;
-        }
-
-        .chat-footer {
             display: flex;
             align-items: center;
-            padding: 15px;
-            background-color: white;
-            border-top: 1px solid #ddd;
-            gap: 10px; /* Space between elements */
+            justify-content: space-between;
+            height: 80px;
         }
-
-        .chat-input {
-            flex: 1;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 10px;
-            font-size: 16px;
+        header img {
+            height: 60px;
         }
-
-        .audio-btn {
-            background-color: #4CAF50;
+        header h1 {
             color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            font-size: 24px;
+            margin: 0;
+        }
+        .container {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: background-color 0.3s;
+            flex-grow: 1;
+            height: calc(100vh - 80px); /* Full height minus header */
         }
-
-        .audio-btn:hover {
-            background-color: #45a049;
+        .sidebar {
+            width: 250px;
+            background-color: #f4f4f4;
+            padding: 20px;
+            position: relative;
+            height: 100%;
+            overflow: auto;
         }
-
-        .send-btn {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .send-btn:hover {
-            background-color: #45a049;
-        }
-
-        .footer {
-            text-align: center;
-            margin: 20px 0;
-            font-size: 14px;
-            color: #666;
-        }
-
-        .footer a {
-            color: #4CAF50;
+        .sidebar a {
+            display: block;
+            color: #00548d;
+            padding: 10px 15px;
             text-decoration: none;
+            margin-bottom: 10px;
+            border-radius: 4px;
         }
-
-        .footer a:hover {
-            text-decoration: underline;
+        .sidebar a:hover {
+            background-color: #ddd;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow: auto;
+            background-color: #ffffff;
+        }
+        h2 {
+            color: #00548d;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        footer {
+            background-color: #00548d;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #00548d;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #00548d;
+            color: white;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Mental Health AI Therapist Agent</h1> <!-- Logo with fancy font -->
-        <p>Guiding you towards better mental health</p>
+
+<header>
+    <img src="https://i.imgur.com/5hgMELz.jpg" alt="GVSU Logo" width="400" height="80">
+    <h1>Nursing Data Analysis with SPSS</h1>
+</header>
+
+<div class="container">
+    <div class="sidebar">
+        <a href="#" onclick="showContent('desc-stats')">Descriptive Statistics</a>
+        <a href="#" onclick="showContent('t-test')">Independent Samples T-Test</a>
+        <a href="#" onclick="showContent('paired-t-test')">Paired Samples T-Test</a>
+        <a href="#" onclick="showContent('anova')">One-Way ANOVA</a>
+        <a href="#" onclick="showContent('chi-square')">Chi-Square Test</a>
+        <a href="#" onclick="showContent('correlation')">Correlation Analysis</a>
+        <a href="#" onclick="showContent('linear-regression')">Simple Linear Regression</a>
+        <a href="#" onclick="showContent('multiple-regression')">Multiple Linear Regression</a>
+        <a href="#" onclick="showContent('logistic-regression')">Binary Logistic Regression</a>
+        <a href="#" onclick="showContent('survival')">Kaplan-Meier Survival Analysis</a>
     </div>
 
-    <div class="chat-container">
-        <div class="chat-log" id="chat-log">
-            <!-- Initial Welcome Message -->
-            <div class="message ai-message"><b>AI Therapist:</b> Welcome to AI Therapist Agent. Let's talk about how you're feeling.
-                <br>Feel free to share your thoughts, and I'll guide you through.
-                <br>Type "results" to view your PHQ-9 assessment results anytime.
-            </div>
+    <div class="content">
+        <div id="desc-stats" class="content-section active">
+            <h2>Descriptive Statistics</h2>
+            <p><strong>Steps in SPSS:</strong></p>
+            <ol>
+                <li>Go to <em>Analyze > Descriptive Statistics > Frequencies</em>.</li>
+                <li>Select the variables you want to summarize (e.g., age, weight, gender).</li>
+                <li>Click <strong>OK</strong> to generate frequencies or descriptive statistics.</li>
+            </ol>
+            <p><strong>Example Output:</strong></p>
+            <table>
+                <tr>
+                    <th>Variable</th>
+                    <th>Mean</th>
+                    <th>Standard Deviation</th>
+                    <th>Minimum</th>
+                    <th>Maximum</th>
+                </tr>
+                <tr>
+                    <td>Age</td>
+                    <td>45.6</td>
+                    <td>12.4</td>
+                    <td>18</td>
+                    <td>76</td>
+                </tr>
+                <tr>
+                    <td>Weight</td>
+                    <td>78.5</td>
+                    <td>15.3</td>
+                    <td>50</td>
+                    <td>110</td>
+                </tr>
+            </table>
+            <p><strong>Interpretation:</strong> The average age of the participants is 45.6 years, with a range between 18 and 76. The mean weight is 78.5 kg, with a standard deviation of 15.3 kg, indicating some variability in weight among participants.</p>
         </div>
-        <div class="chat-footer">
-            <input type="text" id="user-input" class="chat-input" placeholder="Type your response here..." onkeydown="handleKeyPress(event)">
-            <button class="audio-btn" id="audio-btn" onmousedown="startRecording()" onmouseup="stopRecording()">
-                <i class="fas fa-microphone"></i> <!-- Microphone icon -->
-            </button>
-            <button onclick="sendMessage()" class="send-btn">
-                <i class="fas fa-paper-plane"></i> <!-- Send icon -->
-            </button>
+
+        <div id="t-test" class="content-section">
+            <h2>Independent Samples T-Test</h2>
+            <p><strong>Steps in SPSS:</strong></p>
+            <ol>
+                <li>Go to <em>Analyze > Compare Means > Independent-Samples T-Test</em>.</li>
+                <li>Select your test variable (e.g., systolic blood pressure) and grouping variable (e.g., gender).</li>
+                <li>Define the groups (e.g., 1 = Male, 2 = Female).</li>
+                <li>Click <strong>OK</strong> to run the test.</li>
+            </ol>
+            <p><strong>Example Output:</strong></p>
+            <table>
+                <tr>
+                    <th>Group</th>
+                    <th>Mean Blood Pressure</th>
+                    <th>Std. Deviation</th>
+                    <th>Sig. (2-tailed)</th>
+                </tr>
+                <tr>
+                    <td>Male</td>
+                    <td>130</td>
+                    <td>15</td>
+                    <td rowspan="2">0.05</td>
+                </tr>
+                <tr>
+                    <td>Female</td>
+                    <td>125</td>
+                    <td>14</td>
+                </tr>
+            </table>
+            <p><strong>Interpretation:</strong> The independent t-test reveals a significant difference in blood pressure between males (M = 130) and females (M = 125), p = 0.05. This suggests that males have a higher average blood pressure than females.</p>
         </div>
+
+        <div id="paired-t-test" class="content-section">
+            <h2>Paired Samples T-Test</h2>
+            <p><strong>Steps in SPSS:</strong></p>
+            <ol>
+                <li>Go to <em>Analyze > Compare Means > Paired-Samples T-Test</em>.</li>
+                <li>Select the pair of variables to compare (e.g., pre- and post-intervention blood pressure).</li>
+                <li>Click <strong>OK</strong> to run the test.</li>
+            </ol>
+            <p><strong>Example Output:</strong></p>
+            <table>
+                <tr>
+                    <th>Time</th>
+                    <th>Mean Blood Pressure</th>
+                    <th>Std. Deviation</th>
+                    <th>Sig. (2-tailed)</th>
+                </tr>
+                <tr>
+                    <td>Pre-intervention</td>
+                    <td>140</td>
+                    <td>10</td>
+                    <td rowspan="2">0.01</td>
+                </tr>
+                <tr>
+                    <td>Post-intervention</td>
+                    <td>130</td>
+                    <td>9</td>
+                </tr>
+            </table>
+            <p><strong>Interpretation:</strong> The paired t-test shows a significant decrease in blood pressure following the intervention (pre: M = 140, post: M = 130, p = 0.01). This indicates that the intervention effectively reduced blood pressure.</p>
+        </div>
+
+        <div id="anova" class="content-section">
+    <h2>One-Way ANOVA</h2>
+    <p><strong>Steps in SPSS:</strong></p>
+    <ol>
+        <li>Go to <em>Analyze > Compare Means > One-Way ANOVA</em>.</li>
+        <li>Select your dependent variable (e.g., systolic blood pressure).</li>
+        <li>Select your factor (grouping) variable (e.g., age group: young, middle-aged, older).</li>
+        <li>Click <strong>OK</strong> to run the test.</li>
+    </ol>
+    <p><strong>Example Output:</strong></p>
+    <table>
+        <tr>
+            <th>Source</th>
+            <th>Sum of Squares</th>
+            <th>df</th>
+            <th>Mean Square</th>
+            <th>F</th>
+            <th>Sig.</th>
+        </tr>
+        <tr>
+            <td>Between Groups</td>
+            <td>300</td>
+            <td>2</td>
+            <td>150</td>
+            <td>5.6</td>
+            <td>0.01</td>
+        </tr>
+        <tr>
+            <td>Within Groups</td>
+            <td>2000</td>
+            <td>197</td>
+            <td>10.15</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Total</td>
+            <td>2300</td>
+            <td>199</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+    <p><strong>Interpretation:</strong> The ANOVA results show a statistically significant difference in blood pressure between age groups, F(2, 197) = 5.6, p = 0.01. This indicates that blood pressure varies significantly by age group.</p>
+</div>
+
+<div id="chi-square" class="content-section">
+    <h2>Chi-Square Test</h2>
+    <p><strong>Steps in SPSS:</strong></p>
+    <ol>
+        <li>Go to <em>Analyze > Descriptive Statistics > Crosstabs</em>.</li>
+        <li>Place the categorical variable in the <strong>Row(s)</strong> and <strong>Column(s)</strong> fields.</li>
+        <li>Click on <strong>Statistics</strong> and check <em>Chi-square</em>.</li>
+        <li>Click <strong>OK</strong> to run the test.</li>
+    </ol>
+    <p><strong>Example Output:</strong></p>
+    
+    <h3>Crosstabulation</h3>
+    <table>
+        <tr>
+            <th>Gender</th>
+            <th>Smoker</th>
+            <th>Non-Smoker</th>
+            <th>Total</th>
+        </tr>
+        <tr>
+            <td>Male</td>
+            <td>50</td>
+            <td>30</td>
+            <td>80</td>
+        </tr>
+        <tr>
+            <td>Female</td>
+            <td>20</td>
+            <td>100</td>
+            <td>120</td>
+        </tr>
+        <tr>
+            <th>Total</th>
+            <td>70</td>
+            <td>130</td>
+            <td>200</td>
+        </tr>
+    </table>
+    
+    <h3>Chi-Square Test Results</h3>
+    <table>
+        <tr>
+            <th>Test</th>
+            <th>Value</th>
+            <th>Degrees of Freedom</th>
+            <th>p-value</th>
+        </tr>
+        <tr>
+            <td>Chi-Square</td>
+            <td>12.24</td>
+            <td>1</td>
+            <td>0.0005</td>
+        </tr>
+    </table>
+    
+    <p><strong>Interpretation:</strong> The Chi-Square test indicates a significant association between gender and smoking status (χ²(1, N = 200) = 12.24, p < 0.001). This suggests that smoking habits differ between males and females, with a higher proportion of males being smokers compared to females.</p>
+</div>
+
+<div id="correlation" class="content-section">
+    <h2>Correlation Analysis</h2>
+    <p><strong>Steps in SPSS:</strong></p>
+    <ol>
+        <li>Go to <em>Analyze > Correlate > Bivariate</em>.</li>
+        <li>Select the variables you want to analyze (e.g., hours studied and test scores).</li>
+        <li>Check <em>Pearson</em> and click <strong>OK</strong>.</li>
+    </ol>
+    <p><strong>Example Output:</strong></p>
+    
+    <h3>Correlation Matrix</h3>
+    <table>
+        <tr>
+            <th>Variable</th>
+            <th>Hours Studied</th>
+            <th>Test Score</th>
+        </tr>
+        <tr>
+            <td>Hours Studied</td>
+            <td>1.00</td>
+            <td>0.85</td>
+        </tr>
+        <tr>
+            <td>Test Score</td>
+            <td>0.85</td>
+            <td>1.00</td>
+        </tr>
+    </table>
+    
+    <p><strong>Interpretation:</strong> There is a strong positive correlation between hours studied and test scores (r = 0.85, p < 0.001). This suggests that as study hours increase, test scores tend to increase as well.</p>
+</div>
+
+
+<div id="linear-regression" class="content-section">
+    <h2>Simple Linear Regression</h2>
+    <p><strong>Steps in SPSS:</strong></p>
+    <ol>
+        <li>Go to <em>Analyze > Regression > Linear</em>.</li>
+        <li>Select the dependent variable (e.g., test score) and the independent variable (e.g., hours studied).</li>
+        <li>Click <strong>OK</strong> to run the regression analysis.</li>
+    </ol>
+    <p><strong>Example Output:</strong></p>
+    
+    <h3>Regression Coefficients Table</h3>
+    <table>
+        <tr>
+            <th>Variable</th>
+            <th>B</th>
+            <th>Std. Error</th>
+            <th>t</th>
+            <th>p-value</th>
+        </tr>
+        <tr>
+            <td>Intercept</td>
+            <td>50.00</td>
+            <td>3.00</td>
+            <td>16.67</td>
+            <td>0.000</td>
+        </tr>
+        <tr>
+            <td>Hours Studied</td>
+            <td>5.00</td>
+            <td>0.50</td>
+            <td>10.00</td>
+            <td>0.000</td>
+        </tr>
+    </table>
+    
+    <p><strong>Interpretation:</strong> The regression analysis shows that for each additional hour studied, the test score increases by 5 points (B = 5.00, p < 0.001). The model is statistically significant, indicating a good fit for the data.</p>
+</div>
+
+<div id="multiple-regression" class="content-section">
+    <h2>Multiple Linear Regression</h2>
+    <p><strong>Steps in SPSS:</strong></p>
+    <ol>
+        <li>Go to <em>Analyze > Regression > Linear</em>.</li>
+        <li>Select the dependent variable (e.g., test score) and multiple independent variables (e.g., hours studied, attendance).</li>
+        <li>Click <strong>OK</strong> to run the regression analysis.</li>
+    </ol>
+    <p><strong>Example Output:</strong></p>
+    
+    <h3>Regression Coefficients Table</h3>
+    <table>
+        <tr>
+            <th>Variable</th>
+            <th>B</th>
+            <th>Std. Error</th>
+            <th>t</th>
+            <th>p-value</th>
+        </tr>
+        <tr>
+            <td>Intercept</td>
+            <td>40.00</td>
+            <td>4.00</td>
+            <td>10.00</td>
+            <td>0.000</td>
+        </tr>
+        <tr>
+            <td>Hours Studied</td>
+            <td>3.50</td>
+            <td>0.70</td>
+            <td>5.00</td>
+            <td>0.000</td>
+        </tr>
+        <tr>
+            <td>Attendance</td>
+            <td>2.00</td>
+            <td>0.50</td>
+            <td>4.00</td>
+            <td>0.001</td>
+        </tr>
+    </table>
+    
+    <p><strong>Interpretation:</strong> The multiple regression analysis indicates that both hours studied (B = 3.50, p < 0.001) and attendance (B = 2.00, p = 0.001) significantly predict test scores. This suggests that higher study hours and better attendance are associated with higher test scores.</p>
+</div>
+
+<div id="logistic-regression" class="content-section">
+    <h2>Binary Logistic Regression</h2>
+    <p><strong>Steps in SPSS:</strong></p>
+    <ol>
+        <li>Go to <em>Analyze > Regression > Binary Logistic</em>.</li>
+        <li>Select the dependent variable (e.g., outcome: disease presence) and independent variables (e.g., age, gender).</li>
+        <li>Click <strong>OK</strong> to run the logistic regression.</li>
+    </ol>
+    <p><strong>Example Output:</strong></p>
+    
+    <h3>Variables in the Equation</h3>
+    <table>
+        <tr>
+            <th>Variable</th>
+            <th>B</th>
+            <th>Wald</th>
+            <th>df</th>
+            <th>p-value</th>
+            <th>Exp(B)</th>
+        </tr>
+        <tr>
+            <td>Intercept</td>
+            <td>-1.50</td>
+            <td>5.00</td>
+            <td>1</td>
+            <td>0.025</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Age</td>
+            <td>0.05</td>
+            <td>4.00</td>
+            <td>1</td>
+            <td>0.045</td>
+            <td>1.05</td>
+        </tr>
+        <tr>
+            <td>Gender (Male)</td>
+            <td>0.80</td>
+            <td>6.50</td>
+            <td>1</td>
+            <td>0.011</td>
+            <td>2.22</td>
+        </tr>
+    </table>
+    
+    <p><strong>Interpretation:</strong> The binary logistic regression analysis shows that age (B = 0.05, p = 0.045) and being male (B = 0.80, p = 0.011) significantly predict the likelihood of having the disease. The odds of having the disease increase by 5% for each additional year of age, and males have approximately 2.22 times the odds of having the disease compared to females.</p>
+</div>
+
+<div id="survival" class="content-section">
+    <h2>Kaplan-Meier Survival Analysis</h2>
+    <p><strong>Steps in SPSS:</strong></p>
+    <ol>
+        <li>Go to <em>Analyze > Survival > Kaplan-Meier</em>.</li>
+        <li>Select the <em>time variable</em> (e.g., survival time) and <em>status variable</em> (e.g., censored or event occurrence).</li>
+        <li>Define the event status by coding (e.g., 1 for event occurred, 0 for censored).</li>
+        <li>Under <strong>Options</strong>, choose to display the survival plot and log-rank test if needed.</li>
+        <li>Click <strong>OK</strong> to run the analysis and generate the survival curve.</li>
+    </ol>
+    
+    <p><strong>Example Output:</strong></p>
+    
+    <h3>Survival Table</h3>
+    <table>
+        <tr>
+            <th>Time (Months)</th>
+            <th>Number at Risk</th>
+            <th>Number of Events</th>
+            <th>Survival Probability</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>100</td>
+            <td>2</td>
+            <td>0.98</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>98</td>
+            <td>8</td>
+            <td>0.90</td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <td>90</td>
+            <td>15</td>
+            <td>0.75</td>
+        </tr>
+        <tr>
+            <td>12</td>
+            <td>75</td>
+            <td>20</td>
+            <td>0.55</td>
+        </tr>
+    </table>
+    
+    <p><strong>Interpretation:</strong> The Kaplan-Meier analysis shows that the survival probability decreases over time. After 12 months, the estimated survival probability is 55%, meaning 55% of the subjects are expected to survive past 12 months. The number of events (deaths or other endpoints) increases as time progresses, leading to a decline in survival probability.</p>
+    
+    <p>Based on the Kaplan-Meier survival curve, the survival rate drops sharply between 6 and 12 months, indicating that this period might be critical in the study population. Further analysis, such as the log-rank test, can be conducted to compare survival curves across different groups (e.g., treatment vs. control).</p>
+</div>
+       
+        <!-- Additional sections such as ANOVA, Chi-Square, Correlation, Regression, etc. would follow a similar format -->
     </div>
+</div>
 
-    <div class="footer">
-        <p>Need help? <a href="mailto:info@aitherapistagent.com">Contact AI Therapist Agent</a></p>
-        <p>© 2024 AI Therapist Agent. All Rights Reserved.</p>
-    </div>
+<footer>
+    <p>&copy; 2024 GVSU Kirkhof College of Nursing | SPSS Tutorial</p>
+</footer>
 
-    <script>
-        let isRecording = false;
-
-        function startRecording() {
-            isRecording = true;
-            console.log("Recording started...");
-            // Add functionality to start recording audio
+<script>
+    function showContent(sectionId) {
+        var sections = document.getElementsByClassName('content-section');
+        for (var i = 0; i < sections.length; i++) {
+            sections[i].classList.remove('active');
         }
+        document.getElementById(sectionId).classList.add('active');
+    }
+</script>
 
-        function stopRecording() {
-            isRecording = false;
-            console.log("Recording stopped...");
-            // Add functionality to stop recording and send audio to the backend
-        }
-
-        function sendMessage() {
-            const userInput = document.getElementById('user-input').value.trim();
-            if (!userInput) return;
-
-            appendMessage(userInput, 'user-message'); // Add user's message
-            document.getElementById('user-input').value = ""; // Clear input field
-
-            // Send user input to backend
-            fetch('/get-response', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: userInput })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.plot) {
-                    appendImageMessage(data.plot, 'image-message'); // Display results graph
-                } else {
-                    appendMessage(data.message, 'ai-message'); // Regular AI response
-                }
-            })
-            .catch(() => {
-                appendMessage("An error occurred. Please try again later.", 'ai-message');
-            });
-        }
-
-        function appendMessage(text, className) {
-            const chatLog = document.getElementById('chat-log');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${className}`;
-            messageDiv.innerHTML = text.replace(/\n/g, '<br>'); // Preserve newlines
-            chatLog.appendChild(messageDiv);
-            chatLog.scrollTop = chatLog.scrollHeight; // Scroll to bottom
-        }
-
-        function appendImageMessage(imageData, className) {
-            const chatLog = document.getElementById('chat-log');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${className}`;
-            messageDiv.innerHTML = `<img src="data:image/png;base64,${imageData}" alt="Results Graph">`;
-            chatLog.appendChild(messageDiv);
-            chatLog.scrollTop = chatLog.scrollHeight; // Scroll to bottom
-        }
-
-        function handleKeyPress(event) {
-            if (event.key === "Enter") {
-                sendMessage();
-                event.preventDefault();
-            }
-        }
-    </script>
 </body>
 </html>
